@@ -3,11 +3,14 @@ function showPic(whichPic) {
 	if(!document.getElementById("placeholder")) return false;
 	var source = whichPic.getAttribute("href");
 	var placeholder = document.getElementById("placeholder");
+	if (placeholder.nodeName != "IMG") return false;
 	placeholder.setAttribute("src",source);
 	if(document.getElementById("description")){
-		var text = whichPic.getAttribute("title");
+		var text = whichPic.getAttribute("title") ? whichPic.getAttribute("title") : "";
 		var description = document.getElementById("description");
-		description.firstChild.nodeValue = text;
+		if (description.firstChild.nodeType == 3) {
+			description.firstChild.nodeValue = text;
+		}
 	}
 	return true;
 }
@@ -20,7 +23,7 @@ function prepareGallery(){
 	var links = gallery.getElementByTagName("a");
 	for(var i = 0;i < links.length;i++){
 		links[i].onclick = function(){
-			return !showPic(this);
+			return showPic(this) ? false : true;
 		}
 	}
 }
@@ -37,8 +40,10 @@ function addLoadEvent(func){
 	}
 }
 
-function countBodyChildren() {
-	var body_element = document.getElementByTagName("body")[0];
-	alert(body_element.childNodes.length);
-}
+// function countBodyChildren() {
+// 	var body_element = document.getElementByTagName("body")[0];
+// 	alert(body_element.childNodes.length);
+// }
+
+addLoadEvent(prepareGallery);
 
