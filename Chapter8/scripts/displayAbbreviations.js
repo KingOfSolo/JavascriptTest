@@ -1,17 +1,32 @@
+/*
+*支持平稳退化
+*/
+function addLoadEvent(func){
+	var oldonload = window.onload;
+	if(typeof window.onload != 'function'){
+		window.onload = func;
+	} else {
+		window.onload = function(){
+			oldonload();
+			func();
+		}
+	}
+}
 
 displayAbbreviations(){
-	if(!document.getElementByTagName || !document.createElement
+	if(!document.getElementsByTagName || !document.createElement
 		|| !document.createTextNode) return false;
 	//取得所有缩略词
-	var abbreviations = document.getElementByTagName("abbr");
+	var abbreviations = document.getElementsByTagName("abbr");
 	if(abbreviations.length < 1) return false;
 	var defs = new Array();
 	//遍历这些缩略词
 	for(var i = 0; i<abbreviations.length; i++){
 		var current_abbr = abbreviations[i];
+		if(current_abbr.childNodes.length < 1) continue;
 		var definition = current_abbr.getAttribute("title");
 		var key = current_abbr.lastChild.nodeValue;
-		defs[i] = definition;
+		defs[key] = definition;
 	}
 	//创建定义列表
 	var dlist = document.createElement("dl");
@@ -21,6 +36,7 @@ displayAbbreviations(){
 		//创建定义标题
 		var dtitle = document.createElement("dt");
 		var dtitle_text = document.createTextNode(key);
+		dtitle.appendChild(dtitle_text);
 		//创建定义描述
 		var ddesc = document.createElement("dd");
 		var ddesc_text = document.createTextNode(definition);
@@ -29,6 +45,7 @@ displayAbbreviations(){
 		dlist.appendChild(dtitle);
 		dlist.appendChild(ddesc);
 	}
+
 	//创建标题
 	var header = document.createElement("h2");
 	var header_text = document.createTextNode("Abbreviations");
@@ -38,4 +55,4 @@ displayAbbreviations(){
 	document.body.appendChild(dlist);
 }
 
-window.load = displayAbbreviations;
+addLoadEvent(displayAbbreviations);
