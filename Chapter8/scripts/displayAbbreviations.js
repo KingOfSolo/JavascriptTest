@@ -1,18 +1,6 @@
 /*
 *支持平稳退化
 */
-function addLoadEvent(func){
-	var oldonload = window.onload;
-	if(typeof window.onload != 'function'){
-		window.onload = func;
-	} else {
-		window.onload = function(){
-			oldonload();
-			func();
-		}
-	}
-}
-
 displayAbbreviations(){
 	if(!document.getElementsByTagName || !document.createElement
 		|| !document.createTextNode) return false;
